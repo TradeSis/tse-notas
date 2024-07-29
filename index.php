@@ -2,11 +2,14 @@
 //lucas 11102023 novo padrao
 include_once __DIR__ . "/../config.php";
 include_once "header.php";
-include_once ROOT . "/sistema/database/loginAplicativo.php";
 
-$nivelMenuLogin = buscaLoginAplicativo($_SESSION['idLogin'], 'Notas');
-$configuracao = 1;
-$nivelMenu = $nivelMenuLogin['nivelMenu'];
+if(!isset($_SESSION['nomeAplicativo']) || isset($_SESSION['nomeAplicativo']) && $_SESSION['nomeAplicativo'] !== 'Notas'){
+    $_SESSION['nomeAplicativo'] = 'Notas';
+    include_once ROOT . "/sistema/database/loginAplicativo.php";
+
+    $nivelMenuLogin = buscaLoginAplicativo($_SESSION['idLogin'], $_SESSION['nomeAplicativo']);
+    $_SESSION['nivelMenu'] = $nivelMenuLogin['nivelMenu'];
+}
 
 ?>
 <!doctype html>
@@ -39,7 +42,7 @@ $nivelMenu = $nivelMenuLogin['nivelMenu'];
                         if (isset($_GET['tab'])) {
                             $tab = $_GET['tab'];
                         }
-                        if ($nivelMenu >= 1) {
+                        if ($_SESSION['nivelMenu'] >= 1) {
                             if ($tab == '') {
                                 $tab = 'notasservico';
                             } ?>
@@ -48,7 +51,7 @@ $nivelMenu = $nivelMenuLogin['nivelMenu'];
                                 href="?tab=notasservico" role="tab">Notas Serviço</a>
                             </li>
                         <?php }
-                        if ($nivelMenu >= 4) { ?>
+                        if ($_SESSION['nivelMenu'] >= 4) { ?>
                             <li class="nav-item mr-1">
                                 <a class="nav-link 
                                 <?php if ($tab == "configuracao") {echo " active ";} ?>" 
@@ -67,11 +70,16 @@ $nivelMenu = $nivelMenuLogin['nivelMenu'];
                         $getTab = '';
                     } ?>
                     <select class="form-select mt-2 ts-selectSubMenuAplicativos" id="subtabNotas">
+
+                        <?php if ($_SESSION['nivelMenu'] >= 1) { ?>
                         <option value="<?php echo URLROOT ?>/notas/?tab=notasservico" 
                         <?php if ($getTab == "notasservico") {echo " selected ";} ?>>Nota Serviço</option>
+                        <?php }
 
+                        if ($_SESSION['nivelMenu'] >= 4) { ?>
                         <option value="<?php echo URLROOT ?>/notas/?tab=configuracao" 
                         <?php if ($getTab == "configuracao") {echo " selected ";} ?>>Configurações</option>
+                        <?php } ?>
                     </select>
                 </div>
 
