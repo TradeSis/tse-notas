@@ -1,0 +1,11 @@
+{
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/nuvem-fiscal/nuvemfiscal-sdk-php.git"
+    }
+  ],
+  "require": {
+    "nuvem-fiscal/nuvemfiscal-sdk-php": "*@dev"
+  }
+}
